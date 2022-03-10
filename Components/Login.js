@@ -10,7 +10,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import backgroundImage from '../assets/background1.gif';
+import backgroundImage from '../assets/background.jpg';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,10 +18,10 @@ const styles = StyleSheet.create({
   },
   logoStyle: {
     alignSelf: 'center',
-    fontSize: 55,
+    fontSize: 45,
     margin: 60,
     fontWeight: 'bold',
-    color: 'darkblue',
+    color: 'purple',
   },
   textInput: {
     borderWidth: 1,
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 5,
     fontWeight: 'bold',
-    color: '#9d9ded',
+    color: '#C3B1E1',
   },
 });
 class LoginPage extends Component {

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ImageBackground } from 'react-native-web';
-import backgroundImage from '../assets/homeBackground.gif';
+import backgroundImage from '../assets/homeBackground.jpeg';
 
 const styles = StyleSheet.create({
   lodingContainer: {
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     margin: 50,
   },
   logoStyle: {
-    color: '#0000ff',
+    color: 'purple',
     alignSelf: 'center',
     fontSize: 45,
     fontWeight: 'bold',
@@ -51,18 +51,17 @@ const styles = StyleSheet.create({
   friendList: {
     fontSize: 30,
     fontWeight: 'bold',
-    alignSelf: 'center',
+    color: '#C3B1E1',
+    marginLeft: 10,
   },
   friendRequest: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 5,
     borderColor: 'blue',
-    backgroundColor: '#C3B1E1',
     marginBottom: 10,
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
+    color: '#C3B1E1',
+    marginLeft: 10,
   },
   textBoxContainer: {
     flex: 1,

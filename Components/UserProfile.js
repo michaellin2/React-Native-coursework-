@@ -4,15 +4,16 @@
 import React, { Component } from 'react';
 import {
   Text,
-  ScrollView,
   TouchableOpacity,
   View,
   Image,
   FlatList,
   StyleSheet,
+  ImageBackground,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import backIcon from '../assets/backIcon.png';
+import backIcon from '../assets/blueBackIcon.png';
+import backgroundImage from '../assets/homeBackground.jpeg';
 import editIcon from '../assets/editIcon.png';
 import deleteIcon from '../assets/deleteIcon.png';
 import thumbUpIcon from '../assets/thumbIcon.png';
@@ -38,6 +39,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderWidth: 2,
   },
+  backgroundContainer: {
+    height: '100%',
+    backgroundColor: 'transparent',
+  },
   post: {
     flex: 1,
     flexDirection: 'column',
@@ -53,6 +58,8 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 15,
     borderRadius: 5,
+    borderColor: 'blue',
+    backgroundColor: '#C3B1E1',
   },
   viewIcon: {
     flex: 1,
@@ -330,66 +337,71 @@ class UserProfilePage extends Component {
       );
     }
     return (
-      <ScrollView style={styles.container}>
-        <View>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+      <View style={styles.container}>
+        <ImageBackground
+          style={styles.backgroundContainer}
+          source={backgroundImage}
+        >
+          <View>
+            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+              <Image
+                style={{ height: 40, width: 40, margin: 10 }}
+                source={backIcon}
+              />
+            </TouchableOpacity>
             <Image
-              style={{ height: 60, width: 60 }}
-              source={backIcon}
+              style={styles.imageContainer}
+              source={{ uri: this.state.photo }}
             />
-          </TouchableOpacity>
-          <Image
-            style={styles.imageContainer}
-            source={{ uri: this.state.photo }}
-          />
-        </View>
+          </View>
 
-        <View style={styles.post}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('UserPost')}
-          >
-            <Image
-              style={styles.addIcon}
-              source={addIcon}
-            />
-          </TouchableOpacity>
-          <FlatList
-            data={this.state.userData}
-            renderItem={({ item }) => (
-              <View>
-                <Text
-                  style={styles.textContainer}
-                >
-                  <Text style={{ fontWeight: 'bold' }}>
-                    {item.author.first_name}
-                    {' '}
-                    {item.author.last_name}
-                    :
+          <View style={styles.post}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('UserPost')}
+            >
+              <Image
+                style={styles.addIcon}
+                source={addIcon}
+              />
+            </TouchableOpacity>
+            <FlatList
+              data={this.state.userData}
+              renderItem={({ item }) => (
+                <View>
+                  <Text
+                    style={styles.textContainer}
+                  >
+                    <Text style={{ fontWeight: 'bold' }}>
+                      {item.author.first_name}
+                      {' '}
+                      {item.author.last_name}
+                      :
+                    </Text>
+
+                    <TouchableOpacity
+                      onPress={async () => {
+                        await AsyncStorage.setItem('@UserPostId', item.post_id);
+                        this.props.navigation.navigate('SinglePost');
+                      }}
+                    >
+                      <Text style={{ margin: 5 }}>
+                        {item.text}
+                        <Image
+                          style={styles.viewIcon}
+                          source={viewIcon}
+                        />
+                      </Text>
+                    </TouchableOpacity>
                   </Text>
 
-                  <TouchableOpacity
-                    onPress={async () => {
-                      await AsyncStorage.setItem('@UserPostId', item.post_id);
-                      this.props.navigation.navigate('SinglePost');
-                    }}
-                  >
-                    <Text style={{ margin: 5 }}>
-                      {item.text}
-                      <Image
-                        style={styles.viewIcon}
-                        source={viewIcon}
-                      />
-                    </Text>
-                  </TouchableOpacity>
-                </Text>
-
-                {this.showPost(item)}
-              </View>
-            )}
-            keyExtractor={(item) => item.post_id.toString()}
-          />
-        </View>
-      </ScrollView>
+                  {this.showPost(item)}
+                </View>
+              )}
+              keyExtractor={(item) => item.post_id.toString()}
+            />
+          </View>
+        </ImageBackground>
+      </View>
     );
   }
 }

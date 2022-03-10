@@ -7,7 +7,7 @@ import {
 }
   from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import backgroundImage from '../assets/homeBackground.gif';
+import backgroundImage from '../assets/homeBackground.jpeg';
 import editIcon from '../assets/editIcon.png';
 import deleteIcon from '../assets/deleteIcon.png';
 import thumbUpIcon from '../assets/thumbIcon.png';
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     margin: 50,
   },
   logoStyle: {
-    color: '#0000ff',
+    color: 'purple',
     alignSelf: 'center',
     fontSize: 45,
     fontWeight: 'bold',

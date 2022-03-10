@@ -1,17 +1,18 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import {
-  ScrollView,
   TextInput,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   Button,
+  View,
 } from 'react-native';
-import backIcon from '../assets/backIcon.png';
+import { ImageBackground } from 'react-native-web';
+import backIcon from '../assets/blueBackIcon.png';
+import backgroundImage from '../assets/background.jpg';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,27 +20,26 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     flex: 1,
-    height: 80,
-    width: 80,
+    height: 40,
+    width: 40,
     alignSelf: 'flex-start',
+    marginVertical: 20,
+    marginLeft: 20,
   },
-  textContainer: {
-    flex: 1,
-    marginVertical: 40,
-    alignSelf: 'center',
-    fontSize: 60,
-    fontFamily: 'Lucida Calligraphy',
-    color: 'red',
-  },
+
   logoStyle: {
     alignSelf: 'center',
-    fontSize: 40,
-    marginVertical: 20,
+    marginTop: -20,
+    fontSize: 45,
+    fontWeight: 'bold',
+    color: 'purple',
   },
   textInput: {
     padding: 10,
     borderWidth: 1,
     margin: 10,
+    borderColor: 'blue',
+    backgroundColor: '#C3B1E1',
   },
 });
 class RegisterPage extends Component {
@@ -53,23 +53,6 @@ class RegisterPage extends Component {
       Password: '',
     };
   }
-
-  componentDidMount() {
-    this.refresh = this.props.navigation.addListener('focus', () => {
-      this.checkLoggedIn();
-    });
-  }
-
-  componentWillUnmount() {
-    this.refresh();
-  }
-
-  checkLoggedIn = async () => {
-    const value = await AsyncStorage.getItem('@session_token');
-    if (value == null) {
-      this.props.navigation.navigate('Login');
-    }
-  };
 
   signUp = () => {
     const dataStorage = {
@@ -102,41 +85,47 @@ class RegisterPage extends Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('Login')}
+      <View style={styles.container}>
+        <ImageBackground
+          style={{ height: '100%', backgroundColor: 'transparent' }}
+          source={backgroundImage}
         >
-          <Image style={styles.backIcon} source={backIcon} />
-        </TouchableOpacity>
-        <Text style={styles.textContainer}>Register</Text>
-        <Text style={styles.logoStyle}>ᔕᑭᗩᑕEᗷOOK</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter your first name"
-          onChangeText={(Firstname) => this.setState({ Firstname })}
-          value={this.state.Firstname}
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter your last name"
-          onChangeText={(Lastname) => this.setState({ Lastname })}
-          value={this.state.Lastname}
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter your email address"
-          onChangeText={(Email) => this.setState({ Email })}
-          value={this.state.Email}
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter your last password"
-          onChangeText={(Password) => this.setState({ Password })}
-          value={this.state.Password}
-          secureTextEntry
-        />
-        <Button title="Create Account" onPress={() => this.signUp()} />
-      </ScrollView>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Login')}
+          >
+            <Image style={styles.backIcon} source={backIcon} />
+          </TouchableOpacity>
+          <Text style={styles.logoStyle}>ᔕᑭᗩᑕEᗷOOK</Text>
+          <View style={{ marginTop: 50 }}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Enter your first name"
+              onChangeText={(Firstname) => this.setState({ Firstname })}
+              value={this.state.Firstname}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Enter your last name"
+              onChangeText={(Lastname) => this.setState({ Lastname })}
+              value={this.state.Lastname}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Enter your email address"
+              onChangeText={(Email) => this.setState({ Email })}
+              value={this.state.Email}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Enter your last password"
+              onChangeText={(Password) => this.setState({ Password })}
+              value={this.state.Password}
+              secureTextEntry
+            />
+            <Button title="Create Account" onPress={() => this.signUp()} />
+          </View>
+        </ImageBackground>
+      </View>
     );
   }
 }

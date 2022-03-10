@@ -12,7 +12,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import backgroundImage from '../assets/homeBackground.gif';
+import backgroundImage from '../assets/homeBackground.jpeg';
 import addIcon from '../assets/blueAdd.png';
 
 const styles = StyleSheet.create({
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     margin: 50,
   },
   logoStyle: {
-    color: '#0000ff',
+    color: 'purple',
     alignSelf: 'center',
     fontSize: 45,
     fontWeight: 'bold',
