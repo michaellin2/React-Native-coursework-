@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,6 +9,12 @@ import {
 
 const styles = StyleSheet.create(
   {
+    lodingContainer: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     container: {
       flex: 1,
     },
@@ -34,6 +41,8 @@ class UserPostPage extends Component {
 
     this.state = {
       postText: '',
+      isLoading: true,
+      errorMessage: '',
     };
   }
 
@@ -41,6 +50,7 @@ class UserPostPage extends Component {
     this.refresh = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
     });
+    this.setState({ isLoading: false });
   }
 
   componentWillUnmount() {
@@ -60,35 +70,42 @@ class UserPostPage extends Component {
     const postedText = {
       text: this.state.postText,
     };
-    if (this.state.postText.length < 1 || this.state.postText.length > 500) {
-      throw new Error('Please enter within 1-500 words');
-    } else {
-      return fetch(`http://localhost:3333/api/1.0.0/user/${id}/post`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Authorization': sessionToken },
-        body: JSON.stringify(postedText),
-      })
-        .then((response) => {
-          if (response.status === 201) {
-            return response.json();
-          } if (response.status === 401) {
-            throw new Error('Unauthorised');
-          } else if (response.status === 404) {
-            throw new Error('Not Found');
-          } else {
-            throw new Error('Server error');
-          }
-        })
-        .then(() => {
-          this.props.navigation.goBack();
-        })
-        .catch((error) => {
-          Error(error);
-        });
+    if (this.state.postText == '') {
+      this.setState({ errorMessage: 'You cant send an empty post' });
+      return 0;
     }
+    return fetch(`http://localhost:3333/api/1.0.0/user/${id}/post`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Authorization': sessionToken },
+      body: JSON.stringify(postedText),
+    })
+      .then((response) => {
+        if (response.status === 201) {
+          return response.json();
+        } if (response.status === 401) {
+          throw new Error('Unauthorised');
+        } else if (response.status === 404) {
+          throw new Error('Not Found');
+        } else {
+          throw new Error('Server error');
+        }
+      })
+      .then(() => {
+        this.props.navigation.goBack();
+      })
+      .catch((error) => {
+        Error(error);
+      });
   };
 
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.lodingContainer}>
+          <Text>Loading..</Text>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <View style={styles.topText}>
@@ -114,6 +131,9 @@ class UserPostPage extends Component {
             value={this.state.postText}
           />
         </View>
+        <Text style={{ alignSelf: 'center', color: 'red' }}>
+          {this.state.errorMessage}
+        </Text>
       </View>
     );
   }

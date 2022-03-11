@@ -90,7 +90,50 @@ class EditDraftPage extends Component {
     const currId = this.state.currDraft.id;
     this.state.draftBox[currId].text = this.state.postText;
     await AsyncStorage.setItem('draft', JSON.stringify(this.state.draftBox));
-    this.props.navigation.goBack();
+    this.Post();
+    this.removeDraft(currId);
+  };
+
+  Post = async () => {
+    const id = await AsyncStorage.getItem('@session_id');
+    const sessionToken = await AsyncStorage.getItem('@session_token');
+    const draftText = {
+      text: this.state.postText,
+    };
+
+    return fetch(`http://localhost:3333/api/1.0.0/user/${id}/post`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Authorization': sessionToken },
+      body: JSON.stringify(draftText),
+    })
+      .then((response) => {
+        if (response.status === 201) {
+          this.props.navigation.navigate('Home');
+        } if (response.status === 401) {
+          throw new Error('Unauthorised');
+        } else if (response.status === 404) {
+          throw new Error('Not Found');
+        } else {
+          throw new Error('Server error');
+        }
+      })
+      .catch((error) => {
+        Error(error);
+      });
+  };
+
+  removeDraft = async (draftId) => {
+    const draft = JSON.parse(await AsyncStorage.getItem('draft'));
+    const array = [];
+    for (let i = 0; i < draft.length; i += 1) {
+      const draftText = draft[i].text;
+      const draftid = draft[i].id;
+      if (draftid != draftId) {
+        array.push({ id: draftid, text: draftText });
+      }
+    }
+    await AsyncStorage.setItem('draft', JSON.stringify(array));
+    this.getPost();
   };
 
   render() {

@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,6 +14,12 @@ import {
 
 const styles = StyleSheet.create(
   {
+    lodingContainer: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     container: {
       flex: 1,
     },
@@ -39,6 +46,8 @@ class PostPage extends Component {
 
     this.state = {
       postText: '',
+      isLoading: true,
+      errorMessage: '',
     };
   }
 
@@ -46,6 +55,7 @@ class PostPage extends Component {
     this.refresh = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
     });
+    this.setState({ isLoading: false });
   }
 
   componentWillUnmount() {
@@ -66,6 +76,10 @@ class PostPage extends Component {
       text: this.state.postText,
     };
 
+    if (this.state.postText == '') {
+      this.setState({ errorMessage: 'You cant send an empty post' });
+      return 0;
+    }
     return fetch(`http://localhost:3333/api/1.0.0/user/${id}/post`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Authorization': sessionToken },
@@ -100,6 +114,13 @@ class PostPage extends Component {
   };
 
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.lodingContainer}>
+          <Text>Loading..</Text>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <View style={styles.topText}>
@@ -116,7 +137,6 @@ class PostPage extends Component {
           <Text style={styles.topTextFontSize}>
             Text
           </Text>
-
           <View style={{ flexDirection: 'column' }}>
             <TouchableOpacity onPress={() => this.Post()}>
               <Text style={{ fontSize: 20, alignSelf: 'center', marginBottom: 5 }}>
@@ -141,6 +161,9 @@ class PostPage extends Component {
             value={this.state.postText}
           />
         </View>
+        <Text style={{ alignSelf: 'center', color: 'red' }}>
+          {this.state.errorMessage}
+        </Text>
       </View>
     );
   }

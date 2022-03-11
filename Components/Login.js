@@ -13,6 +13,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import backgroundImage from '../assets/background.jpg';
 
 const styles = StyleSheet.create({
+  lodingContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
   },
@@ -48,6 +54,9 @@ class LoginPage extends Component {
     this.state = {
       email: '',
       password: '',
+      isLoading: true,
+      emailError: '',
+      passError: '',
     };
   }
 
@@ -55,6 +64,7 @@ class LoginPage extends Component {
     this.refresh = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
     });
+    this.setState({ isLoading: false });
   }
 
   componentWillUnmount() {
@@ -100,7 +110,30 @@ class LoginPage extends Component {
       });
   };
 
+  emailCheck() {
+    if (this.state.email.length <= 6) {
+      this.setState({ emailError: 'Please enter a valid email' });
+    } else {
+      this.setState({ emailError: '' });
+    }
+  }
+
+  passwordCheck() {
+    if (this.state.password.length <= 5 || this.state.password.length > 20) {
+      this.setState({ passError: 'Please enter password between 6-20 characters' });
+    } else {
+      this.setState({ passError: '' });
+    }
+  }
+
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.lodingContainer}>
+          <Text>Loading..</Text>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <ImageBackground
@@ -114,16 +147,24 @@ class LoginPage extends Component {
             <TextInput
               style={styles.textInput}
               placeholder="Enter your email"
+              onBlur={() => this.emailCheck()}
               onChangeText={(email) => this.setState({ email })}
               value={this.state.email}
             />
+            <Text style={{ color: 'red', alignSelf: 'center' }}>
+              {this.state.emailError}
+            </Text>
             <TextInput
               style={styles.textInput}
               placeholder="Enter your password"
+              onBlur={() => this.passwordCheck()}
               onChangeText={(password) => this.setState({ password })}
               value={this.state.password}
               secureTextEntry
             />
+            <Text style={{ color: 'red', alignSelf: 'center' }}>
+              {this.state.passError}
+            </Text>
             <Button title="Login" onPress={() => this.login()} />
             <Text style={styles.textStyle}>Dont have an account?</Text>
             <Button

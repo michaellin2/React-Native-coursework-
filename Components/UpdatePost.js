@@ -12,6 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
   },
@@ -139,6 +140,13 @@ class UpdatePostPage extends Component {
   };
 
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.lodingContainer}>
+          <Text>Loading..</Text>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <View

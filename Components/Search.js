@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
@@ -133,9 +134,9 @@ class SearchPage extends Component {
       });
   };
 
-  addFriend = async () => {
+  addFriend = async (id) => {
     const sessionToken = await AsyncStorage.getItem('@session_token');
-    return fetch(`http://localhost:3333/api/1.0.0/user/${this.id}/friends`, {
+    return fetch(`http://localhost:3333/api/1.0.0/user/${id}/friends`, {
       method: 'POST',
       headers: {
         'X-Authorization': sessionToken,

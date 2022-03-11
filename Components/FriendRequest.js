@@ -8,10 +8,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ScrollView,
+  ImageBackground,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import backIcon from '../assets/backIcon.png';
+import backgroundImage from '../assets/homeBackground.jpeg';
+import backIcon from '../assets/blueBackIcon.png';
 import tickIcon from '../assets/tickIcon.png';
 import crossIcon from '../assets/crossIcon.png';
 
@@ -25,34 +26,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  backgroundContainer: {
+    height: '100%',
+    backgroundColor: 'transparent',
+  },
   logoContainer: {
-    flex: 1,
     justifyContent: 'center',
   },
   logoStyle: {
-    color: '#0000ff',
+    color: 'purple',
     alignSelf: 'center',
     fontSize: 45,
     fontWeight: 'bold',
+    marginTop: -30,
+  },
+  backIcon: {
+    flex: 1,
+    height: 40,
+    width: 40,
+    alignSelf: 'flex-start',
+    marginVertical: 20,
+    marginLeft: 20,
   },
   friendRequest: {
     fontSize: 30,
     fontWeight: 'bold',
-    margin: 5,
+    color: '#C3B1E1',
+    marginLeft: 10,
+
   },
   textBoxContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    margin: 6,
-  },
-  text: {
-    flex: 1,
     borderWidth: 1,
     padding: 10,
-    width: '96%',
+    margin: 5,
     borderRadius: 5,
     borderColor: 'blue',
-    justifyContent: 'space-around',
+    backgroundColor: '#C3B1E1',
+    flexDirection: 'row',
+  },
+  text: {
+    fontWeight: 'bold',
+    fontSize: 20,
   },
   icon: {
     height: 20,
@@ -172,53 +186,58 @@ class FriendRequestPage extends Component {
       );
     }
     return (
-      <ScrollView style={styles.container}>
-        <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-          <Image
-            style={{ height: 60, width: 60 }}
-            source={backIcon}
-          />
-        </TouchableOpacity>
-        <View style={styles.logoContainer}>
-          <Text style={styles.logoStyle}>ᔕᑭᗩᑕEᗷOOK</Text>
-        </View>
-        <View style={styles.container}>
+      <View style={styles.container}>
+        <ImageBackground
+          style={styles.backgroundContainer}
+          source={backgroundImage}
+        >
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <Image
+              style={styles.backIcon}
+              source={backIcon}
+            />
+          </TouchableOpacity>
+          <View style={styles.logoContainer}>
+            <Text style={styles.logoStyle}>ᔕᑭᗩᑕEᗷOOK</Text>
+          </View>
           <Text style={styles.friendRequest}>Friend Request</Text>
-        </View>
-        <FlatList
-          data={this.state.listData}
-          renderItem={({ item }) => (
-            <View style={styles.textBoxContainer}>
-              <Text style={styles.text}>
-                <Text style={{ fontWeight: 'bold', fontSize: 15 }}>
-                  {item.first_name}
-                  {' '}
-                  {item.last_name}
+          <FlatList
+            data={this.state.listData}
+            renderItem={({ item }) => (
+              <View style={styles.textBoxContainer}>
+                <Text style={styles.text}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 15 }}>
+                    {item.first_name}
+                    {' '}
+                    {item.last_name}
+                  </Text>
                 </Text>
-              </Text>
-              <TouchableOpacity
-                onPress={() => this.acceptFriend(item.user_id)}
-                style={{ alignSelf: 'center' }}
-              >
-                <Image
-                  style={styles.icon}
-                  source={tickIcon}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => this.deleteFriend(item.user_id)}
-                style={{ alignSelf: 'center' }}
-              >
-                <Image
-                  style={styles.icon}
-                  source={crossIcon}
-                />
-              </TouchableOpacity>
-            </View>
-          )}
-          keyExtractor={(item) => item.user_id.toString()}
-        />
-      </ScrollView>
+                <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
+                  <TouchableOpacity
+                    onPress={() => this.acceptFriend(item.user_id)}
+                    style={{ alignSelf: 'center' }}
+                  >
+                    <Image
+                      style={styles.icon}
+                      source={tickIcon}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => this.deleteFriend(item.user_id)}
+                    style={{ alignSelf: 'center' }}
+                  >
+                    <Image
+                      style={styles.icon}
+                      source={crossIcon}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+            keyExtractor={(item) => item.user_id.toString()}
+          />
+        </ImageBackground>
+      </View>
     );
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
@@ -12,6 +13,12 @@ import { Camera } from 'expo-camera';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const styles = StyleSheet.create({
+  lodingContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   cameraContainer: {
     flex: 1,
   },
@@ -42,12 +49,13 @@ class CameraPage extends Component {
     this.state = {
       hasPermission: null,
       type: Camera.Constants.Type.back,
+      isLoading: true,
     };
   }
 
   async componentDidMount() {
     const { status } = await Camera.requestCameraPermissionsAsync();
-    this.setState({ hasPermission: status === 'granted' });
+    this.setState({ hasPermission: status === 'granted', isLoading: false });
     this.refresh = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
     });
@@ -64,12 +72,12 @@ class CameraPage extends Component {
     }
   };
 
-  sendToServer = async () => {
+  sendToServer = async (data) => {
     // Get these from AsyncStorage
     const id = await AsyncStorage.getItem('@session_id');
     const token = await AsyncStorage.getItem('@session_token');
 
-    const res = await fetch(this.data.base64);
+    const res = await fetch(data.base64);
     const blob = await res.blob();
 
     return fetch(`http://localhost:3333/api/1.0.0/user/${id}/photo`, {
@@ -102,7 +110,13 @@ class CameraPage extends Component {
   };
 
   render() {
-    if (this.state.hasPermission) {
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.lodingContainer}>
+          <Text>Loading..</Text>
+        </View>
+      );
+    } if (this.state.hasPermission) {
       return (
         <View style={styles.cameraContainer}>
           <Camera

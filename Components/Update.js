@@ -14,6 +14,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import backIcon from '../assets/backIcon.png';
 
 const styles = StyleSheet.create({
+  lodingContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     alignContent: 'center',
     justifyContent: 'center',
@@ -70,9 +76,9 @@ class UpdatePage extends Component {
     super(props);
 
     this.state = {
-      firstName: '',
-      lastName: '',
-      password: '',
+      FirstName: '',
+      LastName: '',
+      Password: '',
       isLoading: true,
       userData: [],
     };
@@ -151,9 +157,9 @@ class UpdatePage extends Component {
     const id = await AsyncStorage.getItem('@session_id');
     const sessionToken = await AsyncStorage.getItem('@session_token');
     const dataStorage = {
-      first_name: this.state.firstName,
-      last_name: this.state.lastName,
-      password: this.state.password,
+      first_name: this.state.FirstName,
+      last_name: this.state.LastName,
+      password: this.state.Password,
     };
 
     return fetch(`http://localhost:3333/api/1.0.0/user/${id}`, {
@@ -196,7 +202,13 @@ class UpdatePage extends Component {
   }
 
   render() {
-    return (
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.lodingContainer}>
+          <Text>Loading..</Text>
+        </View>
+      );
+    } return (
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('Profile')}
@@ -231,7 +243,7 @@ class UpdatePage extends Component {
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.userData.first_name}
-            onChangeText={(firstName) => this.setState({ firstName })}
+            onChangeText={(FirstName) => this.setState({ FirstName })}
           />
           <Text
             style={styles.text}
@@ -241,7 +253,7 @@ class UpdatePage extends Component {
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.userData.last_name}
-            onChangeText={(lastName) => this.setState({ lastName })}
+            onChangeText={(LastName) => this.setState({ LastName })}
           />
           <Text
             style={styles.text}
@@ -251,7 +263,7 @@ class UpdatePage extends Component {
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.userData.password}
-            onChangeText={(password) => this.setState({ password })}
+            onChangeText={(Password) => this.setState({ Password })}
           />
         </View>
         <TouchableOpacity onPress={() => this.combineFunction()}>

@@ -18,6 +18,12 @@ import deleteIcon from '../assets/deleteIcon.png';
 
 const styles = StyleSheet.create(
   {
+    lodingContainer: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     container: {
       flex: 1,
     },
@@ -56,6 +62,7 @@ class DraftPage extends Component {
     super(props);
     this.state = {
       draftBox: [],
+      isLoading: true,
     };
   }
 
@@ -64,6 +71,7 @@ class DraftPage extends Component {
       this.checkLoggedIn();
       this.getPost();
     });
+    this.setState({ isLoading: false });
   }
 
   componentWillUnmount() {
@@ -123,7 +131,13 @@ class DraftPage extends Component {
   }
 
   render() {
-    return (
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.lodingContainer}>
+          <Text>Loading..</Text>
+        </View>
+      );
+    } return (
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => this.props.navigation.goBack()}
